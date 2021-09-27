@@ -1,0 +1,25 @@
+---
+name: Sync GitHub secrets
+
+on: # yamllint disable-line rule:truthy
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */12 * * *"
+
+jobs:
+  main:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Secrets Sync Action
+        uses: google/secrets-sync-action@v1.4.1
+        with:
+          SECRETS: |
+            ^BJWS_.*
+          REPOSITORIES: |
+            ${{ github.repository_owner }}/.*
+          DRY_RUN: false
+          GITHUB_TOKEN: ${{ secrets.SECRETS_PAT }}
+          CONCURRENCY: 5
+        env:
+          BJWS_APP_ID: ${{ secrets.BJWS_APP_ID }}
+          BJWS_APP_PRIVATE_KEY: ${{ secrets.BJWS_APP_PRIVATE_KEY }}
