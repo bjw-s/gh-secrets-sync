@@ -10,7 +10,7 @@ jobs:
   main:
     runs-on: ubuntu-20.04
     steps:
-      - name: Secrets Sync Action
+      - name: Secrets Sync BJW-S
         uses: google/secrets-sync-action@v1.4.1
         with:
           SECRETS: |
@@ -23,3 +23,15 @@ jobs:
         env:
           BJWS_APP_ID: ${{ secrets.BJWS_APP_ID }}
           BJWS_APP_PRIVATE_KEY: ${{ secrets.BJWS_APP_PRIVATE_KEY }}
+      - name: Secrets Sync Terraform
+        uses: google/secrets-sync-action@v1.4.1
+        with:
+          SECRETS: |
+            ^TF_.*
+          REPOSITORIES: |
+            ${{ github.repository_owner }}/home-ops
+          DRY_RUN: false
+          GITHUB_TOKEN: ${{ secrets.SECRETS_PAT }}
+          CONCURRENCY: 5
+        env:
+          TF_CLOUD_TOKEN: ${{ secrets.TF_CLOUD_TOKEN }}
